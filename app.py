@@ -91,21 +91,52 @@ class_translation = {
 }
 
 # Cargar índices de clase guardados (class_indices.json)
-with open('class_indices.json') as f:
-    class_indices = json.load(f)
+try:
+    with open('class_indices.json') as f:
+        class_indices = json.load(f)
 
-class_names = [None] * len(class_indices)
-for clase, idx in class_indices.items():
-    class_names[idx] = clase
+    # Reconstrucción segura y ordenada de class_names
+    class_names = [clase for clase, _ in sorted(class_indices.items(), key=lambda item: item[1])]
+except Exception as e:
+    st.error(f"❌ Error al cargar class_indices.json: {e}")
+    st.stop()
 
+# Cargar modelo
 try:
     model = load_model()
-    st.success("Modelo cargado exitosamente.")
+    st.success("✅ Modelo cargado exitosamente.")
     st.write(f"Este modelo tiene **{model.output_shape[-1]}** salidas (clases).")
 
+    # Validar que el número de clases coincida
+    if len(class_names) != model.output_shape[-1]:
+        st.warning(f"⚠️ Número de clases en class_indices ({len(class_names)}) no coincide con las salidas del modelo ({model.output_shape[-1]}).")
 except Exception as e:
-    st.error(f"Error al cargar el modelo: {e}")
+    st.error(f"❌ Error al cargar el modelo: {e}")
     st.stop()
+# Cargar índices de clase guardados (class_indices.json)
+try:
+    with open('class_indices.json') as f:
+        class_indices = json.load(f)
+
+    # Reconstrucción segura y ordenada de class_names
+    class_names = [clase for clase, _ in sorted(class_indices.items(), key=lambda item: item[1])]
+except Exception as e:
+    st.error(f"❌ Error al cargar class_indices.json: {e}")
+    st.stop()
+
+# Cargar modelo
+try:
+    model = load_model()
+    st.success("✅ Modelo cargado exitosamente.")
+    st.write(f"Este modelo tiene **{model.output_shape[-1]}** salidas (clases).")
+
+    # Validar que el número de clases coincida
+    if len(class_names) != model.output_shape[-1]:
+        st.warning(f"⚠️ Número de clases en class_indices ({len(class_names)}) no coincide con las salidas del modelo ({model.output_shape[-1]}).")
+except Exception as e:
+    st.error(f"❌ Error al cargar el modelo: {e}")
+    st.stop()
+
 
 # Interfaz para subir la imagen
 uploaded_file = st.file_uploader("Elige una imagen de una hoja...", type=["jpg", "jpeg", "png"])
@@ -119,15 +150,15 @@ if uploaded_file is not None:
     if st.button("Predecir"):
         with st.spinner("Analizando la imagen..."):
             prediction = predict(image, model)
-            
+
             predicted_class_index = np.argmax(prediction)
             if predicted_class_index < len(class_names):
                 predicted_class = class_names[predicted_class_index]
             else:
                 predicted_class = f"Clase desconocida ({predicted_class_index})"
-            
+
             confidence = float(prediction[0][predicted_class_index]) * 100
-            
+
             st.subheader("Resultado:")
             translated_class = class_translation.get(predicted_class, predicted_class)
 
@@ -136,16 +167,21 @@ if uploaded_file is not None:
             else:
                 st.error(f"📊 Predicción: **{translated_class}** (Planta enferma) con {confidence:.2f}% de confianza")
 
-            
             st.subheader("Probabilidades de todas las clases:")
-            probs_df = {
-                "Clase": class_names,
-                "Probabilidad (%)": [float(prediction[0][i]) * 100 for i in range(len(prediction[0]))]
-            }
-            
-            df = pd.DataFrame(probs_df)
-            df_top = df.sort_values("Probabilidad (%)", ascending=False).head(5)
-            st.table(df_top)
-            
-            df_low = df.sort_values("Probabilidad (%)", ascending=True).head(5)
-            st.table(df_low)
+
+            # Solo crear DataFrame si las longitudes coinciden
+            if len(class_names) == len(prediction[0]):
+                probs_df = {
+                    "Clase": class_names,
+                    "Probabilidad (%)": [float(p) * 100 for p in prediction[0]]
+                }
+
+                df = pd.DataFrame(probs_df)
+                df_top = df.sort_values("Probabilidad (%)", ascending=False).head(5)
+                st.table(df_top)
+
+                df_low = df.sort_values("Probabilidad (%)", ascending=True).head(5)
+                st.table(df_low)
+            else:
+                st.warning("⚠️ No se pueden mostrar las probabilidades porque las clases y las predicciones no coinciden en tamaño.")
+
