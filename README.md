@@ -11,3 +11,11 @@
 [Codigo de Entrenamiento](https://colab.research.google.com/drive/12OiL6Z-tPoBeWlwTsavgOiBizk3vn4La?usp=sharing)
 
 [Codigo de Produccion en Streamlit](https://github.com/Condenado7/Hojas/blob/main/app.py)
+
+[Dataset](https://www.kaggle.com/datasets/asheniranga/leaf-disease-dataset-combination/data)
+
+#Algunas imagenes para probar:
+
+![hoja4](https://github.com/user-attachments/assets/4a785129-4423-4ffa-940c-ef5bc0777e3c)
+![hoja3](https://github.com/user-attachments/assets/45094d23-ede6-4320-bfc7-918ec6cf8c75)
+![04668f5f-ff32-4c62-8d1b-e9e988a077d3___MD_Powd M 0872](https://github.com/user-attachments/assets/d3d5c39d-44e5-4fb4-baf7-0da12c0fc834)
