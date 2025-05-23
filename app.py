@@ -13,6 +13,26 @@ st.set_page_config(
 )
 
 st.title("Detector de Enfermedades en Plantas 🌿")
+st.divider()
+st.markdown("<p style='font-size: 17px;'>Proyecto semestral de la materia de Inteligencia Artificial, grupo 9CC4.</p>", unsafe_allow_html=True)
+st.markdown("<p style='font-size: 17px;'>El proyecto consiste en un sistema capaz de realizar una detección temprana y precisa de enfermedades " \
+" en plantas a partir de la imagen de una de sus hojas. Las enfermedades son una de las principales causas de pérdida en la producción agrícola, " \
+"por lo que es fundamental mitigar estos daños y asegurar la calidad de los cultivos mediante una detección oportuna.</p>", unsafe_allow_html=True)
+with open("cnn_enfermedades_en_plantas_segun_hojas.pdf", "rb") as file:
+    pdf_bytes = file.read()
+# Crear el botón de descarga
+st.download_button(
+    label="📥 Descargar documento PDF",
+    data=pdf_bytes,
+    file_name="proyecto_CNN_hojas.pdf",
+    mime="application/pdf"
+)
+st.divider()
+st.markdown("<p style='font-size: 22px;'>Equipo:</p>", unsafe_allow_html=True)
+st.markdown("<p style='font-size: 17px;'>Jair Alejandro Gaytán Espíndola (353205)</p>", unsafe_allow_html=True)
+st.markdown("<p style='font-size: 18px;'>José Eduardo Conde Hernández (299506)</p>", unsafe_allow_html=True)
+st.markdown("<p style='font-size: 17px;'>Leonardo Trevizo Herrera (348814)</p>", unsafe_allow_html=True)
+st.divider()
 st.write("Sube una imagen de una hoja y el modelo predecirá si está sana o enferma, y qué tipo de enfermedad tiene.")
 
 # Función para cargar el modelo
