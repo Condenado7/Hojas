@@ -13,6 +13,26 @@ st.set_page_config(
 )
 
 st.title("Detector de Enfermedades en Plantas 🌿")
+st.divider()
+st.markdown("<p style='font-size: 17px;'>Proyecto semestral de la materia de Inteligencia Artificial, grupo 9CC4.</p>", unsafe_allow_html=True)
+st.markdown("<p style='font-size: 17px;'>El proyecto consiste en un sistema capaz de realizar una detección temprana y precisa de enfermedades " \
+" en plantas a partir de la imagen de una de sus hojas. Las enfermedades son una de las principales causas de pérdida en la producción agrícola, " \
+"por lo que es fundamental mitigar estos daños y asegurar la calidad de los cultivos mediante una detección oportuna.</p>", unsafe_allow_html=True)
+with open("cnn_enfermedades_en_plantas_segun_hojas.pdf", "rb") as file:
+    pdf_bytes = file.read()
+# Crear el botón de descarga
+st.download_button(
+    label="📥 Descargar documento PDF",
+    data=pdf_bytes,
+    file_name="proyecto_CNN_hojas.pdf",
+    mime="application/pdf"
+)
+st.divider()
+st.markdown("<p style='font-size: 22px;'>Equipo:</p>", unsafe_allow_html=True)
+st.markdown("<p style='font-size: 17px;'>Jair Alejandro Gaytán Espíndola (353205)</p>", unsafe_allow_html=True)
+st.markdown("<p style='font-size: 18px;'>José Eduardo Conde Hernández (299506)</p>", unsafe_allow_html=True)
+st.markdown("<p style='font-size: 17px;'>Leonardo Trevizo Herrera (348814)</p>", unsafe_allow_html=True)
+st.divider()
 st.write("Sube una imagen de una hoja y el modelo predecirá si está sana o enferma, y qué tipo de enfermedad tiene.")
 
 # Función para cargar el modelo
@@ -123,20 +143,6 @@ try:
 except Exception as e:
     st.error(f"❌ Error al cargar class_indices.json: {e}")
     st.stop()
-
-# Cargar modelo
-try:
-    model = load_model()
-    st.success("✅ Modelo cargado exitosamente.")
-    st.write(f"Este modelo tiene **{model.output_shape[-1]}** salidas (clases).")
-
-    # Validar que el número de clases coincida
-    if len(class_names) != model.output_shape[-1]:
-        st.warning(f"⚠️ Número de clases en class_indices ({len(class_names)}) no coincide con las salidas del modelo ({model.output_shape[-1]}).")
-except Exception as e:
-    st.error(f"❌ Error al cargar el modelo: {e}")
-    st.stop()
-
 
 # Interfaz para subir la imagen
 uploaded_file = st.file_uploader("Elige una imagen de una hoja...", type=["jpg", "jpeg", "png"])
