@@ -124,20 +124,6 @@ except Exception as e:
     st.error(f"❌ Error al cargar class_indices.json: {e}")
     st.stop()
 
-# Cargar modelo
-try:
-    model = load_model()
-    st.success("✅ Modelo cargado exitosamente.")
-    st.write(f"Este modelo tiene **{model.output_shape[-1]}** salidas (clases).")
-
-    # Validar que el número de clases coincida
-    if len(class_names) != model.output_shape[-1]:
-        st.warning(f"⚠️ Número de clases en class_indices ({len(class_names)}) no coincide con las salidas del modelo ({model.output_shape[-1]}).")
-except Exception as e:
-    st.error(f"❌ Error al cargar el modelo: {e}")
-    st.stop()
-
-
 # Interfaz para subir la imagen
 uploaded_file = st.file_uploader("Elige una imagen de una hoja...", type=["jpg", "jpeg", "png"])
 
